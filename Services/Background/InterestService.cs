@@ -32,7 +32,7 @@ namespace Services.Background
                 if (DateTime.UtcNow.Hour == 0 && !hasRan)
                 {
                     using var connection = new SqlConnection(_config.GetConnectionString("DbContext"));
-                    using var command = new SqlCommand("InterestsAdjustment", connection);
+                    using var command = new SqlCommand("InterestsAdjustment", connection); //Procedure is commented below
                     try
                     {
                         command.CommandType = CommandType.StoredProcedure;
@@ -55,3 +55,22 @@ namespace Services.Background
         
     }
 }
+/*Declare @batchSize INT = 10000,  
+@startPosition INT = 1,
+@endPosition INT,
+@incrementalPosition INT = 10000  
+  
+SELECT @endPosition = MAX(Id)   
+FROM dbo.Wallets
+
+
+WHILE @endPosition >= @startPosition
+BEGIN
+    UPDATE dbo.Wallets
+    SET Balance = Balance + (10 / 365) * Balance
+    WHERE Id >= @startPosition
+    AND   Id <= @incrementalPosition
+
+    SET @startPosition = @startPosition + @batchSize
+    SET @incrementalPosition = @startPosition + @batchSize - 1
+END */
